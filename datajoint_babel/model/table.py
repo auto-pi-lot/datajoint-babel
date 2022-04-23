@@ -87,6 +87,8 @@ class Table(BaseModel):
         for attr in attrs:
             out_str += f'    {attr.make()}\n'
 
+        out_str += '    """'
+
         return out_str
 
     def _make_matlab(self) -> str:
