@@ -1,9 +1,28 @@
 [tool.poetry]
 name = "datajoint-babel"
-version = "0.1.0"
+version = "0.1.1"
 description = "Generate schema code from model definitions for both Python and MATLAB"
 authors = ["sneakers-the-rat <JLSaunders987@gmail.com>"]
+readme = "README.md"
 license = "MPL-2.0"
+homepage = "https://github.com/auto-pi-lot/datajoint-babel"
+repository = "https://github.com/auto-pi-lot/datajoint-babel"
+keywords = ["datajoint", "interoperability", "code generation"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development :: Code Generators"
+]
+packages = [
+    { include = "datajoint_babel" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"
