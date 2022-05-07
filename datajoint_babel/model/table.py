@@ -15,7 +15,7 @@ class Table(BaseModel):
     tier: TIERS = 'Manual'
     comment: Optional[Comment] = None
     keys: List[Union[Attribute, Dependency]]
-    attributes: List[Union[Attribute, Dependency]]
+    attributes: Optional[List[Union[Attribute, Dependency]]] = None
 
     @classmethod
     def from_definition(cls, name:str, definition:str, tier:Optional[TIERS]=None) -> 'Table':
