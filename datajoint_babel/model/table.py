@@ -42,7 +42,7 @@ class Table(BaseModel):
             if '->' in line:
                 attr = Dependency.from_string(line)
             else:
-                attr = Dependency.from_string(line)
+                attr = Attribute.from_string(line)
 
             if passed_keys:
                 attrs.append(attr)
