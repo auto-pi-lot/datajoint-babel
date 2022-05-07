@@ -49,6 +49,9 @@ class Table(BaseModel):
             else:
                 keys.append(attr)
 
+        if tier is None:
+            tier = 'MANUAL'
+
         return cls(name=name, tier=tier, comment=comment, keys=keys, attributes=attrs)
 
 
