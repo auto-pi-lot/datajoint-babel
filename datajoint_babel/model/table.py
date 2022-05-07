@@ -3,7 +3,7 @@ from typing import Optional, Union, List, Literal
 from pydantic import BaseModel
 
 from datajoint_babel.constants import TIERS
-from datajoint_babel.model.attribute import Comment, Attribute
+from datajoint_babel.model.attribute import Comment, Attribute, Dependency
 
 
 class Table(BaseModel):
@@ -14,8 +14,8 @@ class Table(BaseModel):
     # schema_name: Optional[str] = None
     tier: TIERS = 'Manual'
     comment: Optional[Comment] = None
-    keys: Union[Attribute, List[Attribute]]
-    attributes: Union[Attribute, List[Attribute]]
+    keys: List[Union[Attribute, Dependency]]
+    attributes: List[Union[Attribute, Dependency]]
 
     @classmethod
     def from_definition(cls, name:str, definition:str, tier:Optional[TIERS]=None) -> 'Table':
@@ -39,10 +39,15 @@ class Table(BaseModel):
                 passed_keys = True
                 continue
 
-            if passed_keys:
-                attrs.append(Attribute.from_string(line))
+            if '->' in line:
+                attr = Dependency.from_string(line)
             else:
-                keys.append(Attribute.from_string(line))
+                attr = Dependency.from_string(line)
+
+            if passed_keys:
+                attrs.append(attr)
+            else:
+                keys.append(attr)
 
         return cls(name=name, tier=tier, comment=comment, keys=keys, attributes=attrs)
 

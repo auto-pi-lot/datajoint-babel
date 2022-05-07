@@ -8,3 +8,7 @@ class ParseError(Exception):
         """
         error_str = f"Could not parse table row.\nExpected Format: {format}\nGot String: {input}"
         raise cls(error_str)
+
+
+class ResolutionError(Exception):
+    """Could not resolve a dependency!"""

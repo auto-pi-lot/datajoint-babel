@@ -8,7 +8,8 @@ from datajoint.declare import attribute_parser
 from pydantic import BaseModel
 
 from datajoint_babel.constants import DATATYPES
-from datajoint_babel.exceptions import ParseError
+from datajoint_babel.exceptions import ParseError, ResolutionError
+from datajoint_babel.spawn import spawn_all_schema
 
 
 class TableRow(BaseModel):
@@ -63,7 +64,8 @@ class DJ_Type(BaseModel):
             if self.datatype == 'filepath':
                 typestr += f'@{self.args}'
             elif isinstance(self.args, list):
-                typestr += f'({",".join(self.args)})'
+                _args = [str(a) for a in self.args]
+                typestr += f'({",".join(_args)})'
             else:
                 typestr += f'({self.args})'
 
@@ -146,3 +148,34 @@ class Attribute(TableRow):
             comment=pieces['comment'],
             default=pieces['default']
         )
+
+
+class Dependency(TableRow):
+    dependency: str
+    _format: ClassVar[str] = "-> {dependency}"
+
+    def make(self) -> str:
+        return f"-> {self.dependency}"
+
+    @classmethod
+    def from_string(cls, input:str) -> 'Dependency':
+        dependency = parse.parse(cls._format, input)
+        if dependency is None:
+            ParseError.format_raise(cls._format, input)
+        return cls(**dependency.named)
+
+    def resolve_keys(self) -> list[str]:
+        """
+        Spawn all schema and try to find the primary keys that this dependency refers to
+
+        Returns:
+            List of primary keys
+        """
+        schema = spawn_all_schema()
+        ours = [sch for sch in schema if sch.__name__ == self.dependency]
+        if len(ours) == 0:
+            raise ResolutionError(f"Could not resolve dependent schema {self.dependency}")
+        return ours[0].primary_key
+
+
+
