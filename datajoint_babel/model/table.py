@@ -50,7 +50,7 @@ class Table(BaseModel):
                 keys.append(attr)
 
         if tier is None:
-            tier = 'MANUAL'
+            tier = 'Manual'
 
         return cls(name=name, tier=tier, comment=comment, keys=keys, attributes=attrs)
 
